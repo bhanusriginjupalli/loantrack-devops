@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoanTrack</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            margin-bottom: 8px;
+        }
+
+        form {
+            display: grid;
+            gap: 10px;
+            max-width: 450px;
+            margin: 25px 0;
+        }
+
+        input, select, button {
+            padding: 10px;
+            font-size: 1rem;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .message {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>LoanTrack</h1>
+    <p>Loan management dashboard</p>
+
+    <h2>Add Loan</h2>
+
+    <form id="loan-form">
+        <input
+            type="text"
+            id="borrower-name"
+            placeholder="Borrower name"
+            required
+        >
+
+        <input
+            type="number"
+            id="loan-amount"
+            placeholder="Loan amount"
+            min="0.01"
+            step="0.01"
+            required
+        >
+
+        <input
+            type="text"
+            id="property-city"
+            placeholder="Property city"
+        >
+
+        <select id="status">
+            <option value="PENDING">PENDING</option>
+            <option value="APPROVED">APPROVED</option>
+            <option value="REVIEW">REVIEW</option>
+        </select>
+
+        <button type="submit">Add Loan</button>
+    </form>
+
+    <div id="message" class="message"></div>
+
+    <h2>Loans</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Borrower</th>
+                <th>Amount</th>
+                <th>City</th>
+                <th>Status</th>
+                <th>Created</th>
+            </tr>
+        </thead>
+        <tbody id="loan-list"></tbody>
+    </table>
+
+    <script src="/app.js"></script>
+</body>
+</html>
