@@ -1,9 +1,16 @@
+import os
 from fastapi import APIRouter, HTTPException, Request, status
 
 from .models import LoanCreate
 
 
 router = APIRouter()
+
+@router.get("/podinfo")
+def podinfo():
+    return {
+        "pod_name": os.getenv("POD_NAME", "local"),
+    }
 
 
 @router.get("/loans")

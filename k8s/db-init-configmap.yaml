@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: loantrack-db-init
+  namespace: loantrack
+data:
+  001_create_loans.sql: |
+    CREATE TABLE IF NOT EXISTS loans (
+        id SERIAL PRIMARY KEY,
+        borrower_name TEXT NOT NULL,
+        loan_amount NUMERIC(14, 2) NOT NULL,
+        property_city TEXT,
+        status TEXT NOT NULL DEFAULT 'PENDING',
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
+
+  002_seed_loans.sql: |
+    INSERT INTO loans (
+        borrower_name,
+        loan_amount,
+        property_city,
+        status
+    )
+    VALUES
+        ('Aarav Sharma', 250000.00, 'Bengaluru', 'APPROVED'),
+        ('Ananya Rao', 180000.00, 'Hyderabad', 'PENDING'),
+        ('Rahul Mehta', 320000.00, 'Mumbai', 'APPROVED'),
+        ('Sneha Iyer', 150000.00, 'Chennai', 'PENDING'),
+        ('Vikram Patel', 275000.00, 'Pune', 'REVIEW');
