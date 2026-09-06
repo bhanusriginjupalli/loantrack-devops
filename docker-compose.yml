@@ -1,0 +1,62 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: loantrack-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/migrations/001_create_loans.sql:/docker-entrypoint-initdb.d/001_create_loans.sql:ro
+      - ./db/seed/001_seed_loans.sql:/docker-entrypoint-initdb.d/002_seed_loans.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - loantrack-net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: loantrack-backend:v1
+    container_name: loantrack-backend
+    restart: unless-stopped
+    environment:
+      DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_PORT: ${DATABASE_PORT}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - loantrack-net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: loantrack-frontend:v1
+    container_name: loantrack-frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - loantrack-net
+
+networks:
+  loantrack-net:
+    driver: bridge
+
+volumes:
+  postgres_data:

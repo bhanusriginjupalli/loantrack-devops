@@ -26,6 +26,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="LoanTrack API",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
 app.include_router(router)
